@@ -31,10 +31,13 @@ class AppClass(object):
         elif typ == 'open.js/':
             typ_in = 'application/javascript '
 
+        elif typ == 'open.css/':
+            typ_in = 'text/css'
+
         elif typ == '':
             typ_in = 'text/plain'
 
-        print(' this is path info '+ typ)
+        print(' this is path info ' + typ)
         response_headers = [('Content-type', typ_in + ';charset=utf-8') ]
         self.start(status, response_headers)
         #url = self.get_url()
@@ -51,6 +54,14 @@ class AppClass(object):
                 yield j.encode()
         elif url == 'open.js':
             fn = 'open.js'
+            with open(fn) as file:
+                array = [row.strip() for row in file]
+
+            for j in array:
+                yield j.encode()
+
+        elif url == 'open.css':
+            fn = 'open.css'
             with open(fn) as file:
                 array = [row.strip() for row in file]
 
