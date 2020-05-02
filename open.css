@@ -1,5 +1,9 @@
 
  H1 {
   font-size: 120%; font-family: Verdana, Arial, Helvetica, sans-serif;
-  color: #333366;
+  color: #ff00ff;
  }
+
+INPUT {
+    background-color: #f03520
+}
