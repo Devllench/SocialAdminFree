@@ -7,9 +7,12 @@ import sys
 
 #запуск сервера wsgi
 if __name__ == '__main__':
+    # указываем покт
     port = int(sys.argv[2]) if len(sys.argv) > 2 else 8000
-    hello_world_app = AppClass
-    httpd = make_server('', port, hello_world_app)
+    # создаем обьект приложения из его класса
+    app = AppClass
+    # созаем http сервер
+    httpd = make_server('', port, app)
     print("Serving  on port , control-C to stop".format(port))
     try:
         httpd.serve_forever()

@@ -1,13 +1,7 @@
 # Класс WSGI приложения
 from model.status_codes_class import StatusCodeClass
 import os
-import wsgiref
-from wsgiref.util import FileWrapper
-from wsgiref import headers, util
-from io import StringIO
-import mimetypes
-
-import wsgiref
+from wsgiref import  util
 
 
 class AppClass(object):
