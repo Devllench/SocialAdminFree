@@ -33,3 +33,18 @@ class ResponseHeadersClass(object):
             # цель запроса index, корень сайта
             self.headers_default = [('Content-type', typ_in + ';charset=utf-8')]
             return self.headers_default
+
+        elif url_patch == 'testcl':
+            # выбираем для css файла
+            typ_in = 'text/html'
+            # цель запроса index, корень сайта
+            self.headers_default = [('Content-type', typ_in + ';charset=utf-8')]
+            return self.headers_default
+
+        else:
+            # выбираем для css файла
+            typ_in = 'text/html'
+            # цель запроса index, корень сайта
+            self.headers_default = [('Content-type', typ_in + ';charset=utf-8')]
+            return self.headers_default
+
