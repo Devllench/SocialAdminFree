@@ -13,49 +13,22 @@ class AppClass(object):
         # обьект для формирования запроса
         self.start = start_response
         self.status_codes = StatusCodeClass()
-        #self.response_headers = ResponseHeadersClass(url_path=util.shift_path_info(self.environ))
+        self.response_headers = ResponseHeadersClass()
 
     # вызов обьекта класса во время запроса.
     def __iter__(self):
-        # указываем status code и response_headers по умолчанию
         # !
-        status_code = self.status_codes.status_ok
-        #response_headers = [('Content-type, text/plain;charset=utf-8')]
-
-        #response_headers = self.response_headers.create_response_headers()
-        # !
-
-        # Формируем response_headers
-        # !
-        # 1
-        # получаем  URL из запроса клиента соответствующий цели запроса внутри приложения.
-        # (псоле http:exmp:8000/...)
         url_request = self.get_url()
-        # 1
-        # 2
-        # выбираем нужный файл  для передачи клиену
-        # исходя из остатока пути в URL соответствующий цели запроса внутри приложения
-        # Указываем Content-Type
-        # 2
-        fn = self.get_file(url_request)
-        # Логируем событие.
-        print(str(datetime.datetime.now()) + '...2% get file:  :' + fn)
-        # 2
-        # 3
-        # Указываем Content-Type
-        # формируем тип ответа клиенту
-        typ_in = self.get_type_answer(url_request)
-        # Логируем событие.
-        print(str(datetime.datetime.now()) + '...3% get  Content-Type  :' + typ_in)
-        # 2
+        print(str(datetime.datetime.now()) + '...1% get url:  :' + url_request)
 
-        # указываем статут и заголовки исходя из запроса
-        response_headers = [('Content-type', typ_in + ';charset=utf-8')]
-        # !
-        print(str(datetime.datetime.now()) + '...4% greate answer: ' + status_code + " | " + str(response_headers))
-        self.start(str(status_code), response_headers)
-        # !
-        # возвращаем тело ответа на запрос клиента
+        fn = self.get_file(url_request)
+        print(str(datetime.datetime.now()) + '...2% get file:  :' + fn)
+
+        # указываем status code и response_headers
+        status_code = self.status_codes.status_ok
+        response_headers = self.response_headers.create_response_headers(url_patch=url_request)
+        self.start(status_code, response_headers)
+
         yield from self.return_string_page_in_body_answer(fn, url_request)
         print(str(datetime.datetime.now()) + '...100% answer: ' + status_code + ' | ' + str(response_headers) + ' | ' + url_request)
 
@@ -109,34 +82,6 @@ class AppClass(object):
                 # закодировав  ее utf-8 в байты
                 yield j.encode()
         # !
-
-    def get_type_answer(self, url_request):
-        # выбираем тип файла в Content-Type для корректного отображения в браузере
-        # получаем цель запроса URL из запроса
-        typ = os.path.join(url_request, self.environ['PATH_INFO'][1:])
-        # Получаем имя файла для определения типа контента
-        # typ1 = self.get_file(url_request)
-        # переменная типа контаента для указания в response_headers
-        typ_in = None
-        # определяем тип конмтента для Content Type в в response_headers
-        # по цели запроса
-        # Здесь необходимо описать все возможные  типы запросов выполняющиеся к приложению браузером
-        # цель запроса home
-        if typ == 'home/':
-            # выбираем для html файла
-            typ_in = 'text/html'
-        # цель запроса js файл используемый в home.html
-        elif typ == 'open.js/':
-            # выбираем для js файла
-            typ_in = 'application/javascript'
-        # цель запроса ccs файл используемый в в home.html
-        elif typ == 'open.css/':
-            # выбираем для css файла
-            typ_in = 'text/css'
-        # цель запроса index, корень сайта
-        elif typ == '':
-            typ_in = 'text/plain'
-        return typ_in
 
     # метод для получения цели запроса path_info из URL запроса клиента
     def get_url(self):
