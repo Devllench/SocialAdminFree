@@ -1,4 +1,4 @@
-# Класс Status Codes
+# Класс создания заголовков ответа
 class ResponseHeadersClass(object):
     def __init__(self, headers_default = None):
         if headers_default is None:
@@ -6,7 +6,7 @@ class ResponseHeadersClass(object):
         self.headers_default = str(headers_default)
 
     def create_response_headers(self, url_patch):
-        typ_in = None
+        # typ_in = None
         if url_patch == '':
             # выбираем для js файла
             typ_in = 'text/html'

@@ -4,6 +4,7 @@ class ResponseBodyClass(object):
         self.string_body_hello = string_body_hello
         self.string_body_err = string_body_err
         self.string_body_no_found = string_body_no_found
+
     def create_string_body(self, file_patch):
         with open(file_patch) as file:
             # формируем массив из строк
