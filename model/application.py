@@ -14,8 +14,6 @@ class AppClass(object):
         self.environ = environ
         # обьект для формирования ответа
         self.start = start_response
-        self.status_codes = StatusCodeClass()
-        self.response_headers = ResponseHeadersClass()
         self.response_body = ResponseBodyClass()
         # обекты для получения информации из запроса
         self.request_date = RequestClintClass()
@@ -24,11 +22,7 @@ class AppClass(object):
     def __iter__(self):
         # ! Класc обработки запроса входящего
         self.request_date.url_path_info = util.shift_path_info(self.environ)
-        # !
-        # Формирования ответа на запроса
-        # указываем status code и response_headers
-        status_code = self.status_codes.status_ok
-        response_headers = self.response_headers.create_response_headers(url_patch=self.request_date.url_path_info)
-        self.start(status_code, response_headers)
-        response_body = self.response_body.create_string_body(file_patch=self.request_date.route())
+        self.start(self.request_date.route().status_code, self.request_date.get_headers())
+        response_body = self.response_body.create_string_body(file_patch=self.request_date.route().file_request)
         yield from response_body
+

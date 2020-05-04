@@ -1,33 +1,58 @@
 # Класс запрос клиента
 # данный класс должен определять является ли запрос валидным и затем указываеться соотвествубщие данные
+from model.request_pattern_class import RequestPatternClass
+from model.status_codes_class import StatusCodeClass
+from model.response_headers_class import ResponseHeadersClass
 
 
 class RequestClintClass(object):
-    def __init__(self, url_path_info=None):
+    def __init__(self, url_path_info=None, answer_page=None):
         self.url_path_info = url_path_info
-        self.file_req = '404.html'
+        self.status_response_code = StatusCodeClass()
+        self.response_headers = ResponseHeadersClass()
+        self.answer_page = answer_page
 
     def route(self):
-        url_pattern = ['', 'home', 'testcl']
-        file_req_pattern = ['open.js', 'open.css']
-        file_path = ['home.html', 'open.js', 'open.css', '404.html', '500.html']
+        page_home = RequestPatternClass(url_request='home',
+                                        file_request='home.html',
+                                        content_type='text/html',
+                                        status_code=self.status_response_code.status_ok)
 
-        if self.url_path_info == url_pattern[0]:
-            self.file_req = 'index.html'
-            return self.file_req
+        page_index = RequestPatternClass(url_request='',
+                                         file_request='index.html',
+                                         content_type='text/html',
+                                         status_code=self.status_response_code.status_ok)
 
-        elif self.url_path_info == url_pattern[1]:
-            self.file_req = 'home.html'
-            return self.file_req
+        page_not_found = RequestPatternClass(url_request=None,
+                                             file_request='404.html',
+                                             content_type='text/html',
+                                             status_code=self.status_response_code.status_not_found)
 
-        elif self.url_path_info == url_pattern[2]:
-            self.file_req = 'index.html'
-            return self.file_req
+        page_js = RequestPatternClass(url_request='open.js',
+                                      file_request='open.js',
+                                      content_type='application/javascript',
+                                      status_code=self.status_response_code.status_ok)
 
-        elif self.url_path_info in file_req_pattern:
-            return self.url_path_info
+        page_css = RequestPatternClass(url_request='open.css',
+                                       file_request='open.css',
+                                       content_type='text/css',
+                                       status_code=self.status_response_code.status_ok)
 
+        if self.url_path_info == page_index.url_request:
+            self.answer_page = page_index
+
+        elif self.url_path_info == page_home.url_request:
+            self.answer_page = page_home
+
+        elif self.url_path_info == page_js.url_request:
+            self.answer_page = page_js
+
+        elif self.url_path_info == page_css.url_request:
+            self.answer_page = page_css
         else:
-            return self.file_req
+            self.answer_page = page_not_found
 
+        return self.answer_page
 
+    def get_headers(self):
+        return self.response_headers.create_response_headers(self.route().content_type)
