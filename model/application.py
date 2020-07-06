@@ -1,7 +1,6 @@
 # Класс WSGI приложения
 from wsgiref import util
-
-from model.response_body_class import ResponseBodyClass
+import wsgiref
 from model.request_date_class import RequestClintClass
 
 
@@ -12,7 +11,6 @@ class AppClass(object):
         self.environ = environ
         # обьект для формирования ответа
         self.start = start_response
-        self.response_body = ResponseBodyClass()
         # обекты для получения информации из запроса
         self.request_date = RequestClintClass()
 
@@ -20,6 +18,7 @@ class AppClass(object):
     def __iter__(self):
         self.request_date.url_path_info = util.shift_path_info(self.environ)
         self.start(self.request_date.route().status_code, self.request_date.get_headers())
-        response_body = self.response_body.create_string_body(file_patch=self.request_date.route().file_request)
-        yield from response_body
+        print(self.start)
+        yield from util.FileWrapper(open(self.request_date.route().file_request, "rb"))
+
 
